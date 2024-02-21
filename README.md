@@ -1,0 +1,2 @@
+# SwitchyRelink
+SwitchyRelink 是一个用于管理和切换代理服务器的浏览器扩展程序。由于谷歌即将不再支持v2版本的插件，决定使用v3版本对SwitchyOmega进行重构。
