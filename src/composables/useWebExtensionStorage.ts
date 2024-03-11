@@ -75,7 +75,7 @@ export function useWebExtensionStorage<T extends(string | number | boolean | obj
   const data = (shallow ? shallowRef : ref)(initialValue) as Ref<T>
   const serializer = options.serializer ?? StorageSerializers[type]
 
-  async function read(event?: { key: string, newValue: string | null }) {
+  async function read(event?: { key: string; newValue: string | null }) {
     if (event && event.key !== key)
       return
 

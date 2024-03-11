@@ -1,20 +1,41 @@
 <script setup lang="ts">
-import { storageDemo } from '~/logic/storage'
+const model = ref('')
 
-function hi() {
-  ElMessage.success(storageDemo.value)
+const modelList = ref([
+  { label: '直接连接', key: 'direct' },
+  { label: '系统代理', key: 'system' },
+  { label: 'ACGP', key: 'acgp' },
+])
+
+function onChange(modelName: string) {
+  model.value = modelName
+}
+
+function foo() {
+  chrome.proxy.settings.get(
+    { incognito: false },
+    (config) => {
+      console.log(JSON.stringify(config))
+    },
+  )
 }
 </script>
 
 <template>
-  <div h-50 w-50 fc flex-col gap-5 p-10>
-    <div w-full flex items-center justify-end>
-      <div class="icon-btn" i-carbon-sun dark:i-carbon-moon @click="toggleDark()" />
-    </div>
-    <h1>Hello {{ storageDemo }}!</h1>
-    <el-input v-model="storageDemo" />
-    <div btn type="primary" @click="hi">
-      👋
+  <div w-50 flex flex-col>
+    <el-check-tag
+      v-for="tag in modelList" :key="tag.key"
+      :checked="model === tag.key" type="primary" @change="onChange(tag.key)"
+    >
+      {{ tag.label }}
+    </el-check-tag>
+
+    <div @click="foo">
+      测试
     </div>
   </div>
 </template>
+
+<style scoped>
+
+</style>
