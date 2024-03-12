@@ -39,6 +39,5 @@
       "js": ["content_script.js"]
     }
   ],
-  "options_page": "src/views/options/main.html",
-  "devtools_page": "src/views/devtools/main.html"
+  "options_page": "src/views/options/main.html"
 }

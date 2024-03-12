@@ -29,7 +29,7 @@ export default defineConfig({
       },
     }),
     AutoImport({
-      imports: ['vue', '@vueuse/core'],
+      imports: ['vue', '@vueuse/core', { 'webextension-polyfill': [['*', 'browser']] }],
       dirs: [r('src/composables')],
       resolvers: [ElementPlusResolver()],
       vueTemplate: true,
