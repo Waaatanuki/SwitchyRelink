@@ -20,6 +20,18 @@ window.addEventListener('hashchange', () => {
 const currentView = computed(() => {
   return routes[`/${currentPath.value.split('/')[1] || ''}`] || NotFound
 })
+
+function deleteProfile(id: string) {
+  ElMessageBox.confirm('是否确实删除该配置', '警告', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
+    .then(() => {
+      const index = profileList.value.findIndex(p => p.form.id === id)
+      if (index !== -1)
+        profileList.value.splice(index, 1)
+
+      window.location.replace('/src/views/options/main.html')
+    })
+    .catch(() => { })
+}
 </script>
 
 <template>
@@ -31,22 +43,31 @@ const currentView = computed(() => {
 
       <div flex flex-col>
         <a href="#/" :class="{ active: currentPath === '#/' || currentPath === '' }" menu-item>
-          <div i-carbon:earth-americas-filled />
-          通用
+          <div fc gap-10px>
+            <div i-carbon:earth-americas-filled />
+            通用
+          </div>
         </a>
         <el-divider />
-        <a v-for="profile, idx in profileList" :key="idx" :href="`#/profile/${profile.form.id}`" :class="{ active: currentPath === `#/profile/${profile.form.id}` }" menu-item>
-          <div i-carbon:ibm-cloud-bare-metal-server />
-          {{ profile.form.name }}
+        <a v-for="profile, idx in profileList" :key="idx" :href="`#/profile/${profile.form.id}`" class="group" :class="{ active: currentPath === `#/profile/${profile.form.id}` }" menu-item>
+          <div fc gap-10px>
+            <div i-carbon:ibm-cloud-bare-metal-server />
+            {{ profile.form.name }}
+          </div>
+          <div i-carbon:trash-can invisible group-hover:visible icon-btn @click.prevent="deleteProfile(profile.form.id)" />
         </a>
         <a href="#/profile" :class="{ active: currentPath === '#/profile' }" menu-item>
-          <div i-carbon:new-tab />
-          新增情景模式
+          <div fc gap-10px>
+            <div i-carbon:new-tab />
+            新增情景模式
+          </div>
         </a>
         <el-divider />
         <a href="#/about" :class="{ active: currentPath === '#/about' }" menu-item>
-          <div i-carbon:information />
-          关于
+          <div fc gap-10px>
+            <div i-carbon:information />
+            关于
+          </div>
         </a>
       </div>
     </div>
