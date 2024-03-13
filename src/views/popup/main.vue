@@ -10,6 +10,10 @@ const defaultProfileList = ref<{ label: string, mode: Mode }[]>([
 function onChange(id: string, config: ProxyConfig) {
   currentProfileId.value = id
   browser.proxy.settings.set({ value: config })
+  if (['direct', 'system'].includes(id))
+    browser.action.setIcon({ path: `/assets/logo_${id}.png` })
+  else
+    browser.action.setIcon({ path: `/assets/logo_custom.png` })
 }
 
 function openSetting() {
@@ -18,8 +22,10 @@ function openSetting() {
 
 onMounted(async () => {
   const config = await browser.proxy.settings.get({})
-  if (['direct', 'system'].includes (config.value.mode))
+  if (['direct', 'system'].includes(config.value.mode)) {
     currentProfileId.value = config.value.mode
+    browser.action.setIcon({ path: `/assets/logo_${config.value.mode}.png` })
+  }
 })
 </script>
 
@@ -47,7 +53,7 @@ onMounted(async () => {
 
     <div border-t-1 />
 
-    <el-check-tag checked type="warning" @change="openSetting">
+    <el-check-tag type="warning" @change="openSetting">
       <div text-center>
         选项
       </div>
