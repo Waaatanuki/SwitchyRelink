@@ -3,8 +3,16 @@ import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
 export const profileList = useWebExtensionStorage<Profile[]>('configList', [])
 
 interface Profile {
-  name: string
+  form: Form
   config: ProxyConfig
+}
+
+interface Form {
+  id: string
+  name: string
+  mode: 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system'
+  url?: string
+  script?: string
 }
 
 interface ProxyConfig {

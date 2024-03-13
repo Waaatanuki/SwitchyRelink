@@ -35,9 +35,9 @@ const currentView = computed(() => {
           通用
         </a>
         <el-divider />
-        <a v-for="profile, idx in profileList" :key="idx" :href="`#/profile/${profile.name}`" :class="{ active: currentPath === `#/profile/${profile.name}` }" menu-item>
+        <a v-for="profile, idx in profileList" :key="idx" :href="`#/profile/${profile.form.id}`" :class="{ active: currentPath === `#/profile/${profile.form.id}` }" menu-item>
           <div i-carbon:ibm-cloud-bare-metal-server />
-          {{ profile.name }}
+          {{ profile.form.name }}
         </a>
         <a href="#/profile" :class="{ active: currentPath === '#/profile' }" menu-item>
           <div i-carbon:new-tab />

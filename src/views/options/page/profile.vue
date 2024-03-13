@@ -2,6 +2,7 @@
 import { profileList } from '~/logic'
 
 const form = reactive({
+  id: '',
   name: '',
   mode: '' as 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system',
   url: '',
@@ -19,6 +20,14 @@ function getPacScript() {
     })
 }
 
+function resetForm() {
+  form.id = ''
+  form.name = ''
+  form.mode = 'pac_script'
+  form.url = ''
+  form.script = ''
+}
+
 function onSubmit() {
   const config = {
     mode: form.mode,
@@ -27,20 +36,41 @@ function onSubmit() {
     },
   }
 
-  profileList.value.push({
-    name: form.name,
-    config,
-  })
+  if (form.id) {
+    const hit = profileList.value.find(p => p.form.id === form.id)!
+    hit.form = { ...form }
+    hit.config = config
+  }
+  else {
+    const id = Number(profileList.value.at(-1)?.form.id || '0')
 
-  browser.proxy.settings.set({ value: config, scope: 'regular' })
-  // window.location.replace('/src/views/options/main.html')
+    profileList.value.push({
+      form: { ...form, id: String(id + 1) },
+      config,
+    })
+  }
+  window.location.replace('/src/views/options/main.html')
 }
 
 function init() {
-  const name = window.location.hash.split('/')[2]
-  if (name) {
-    const hit = profileList.value.find(profile => profile.name === name)
-    console.log(hit)
+  const id = window.location.hash.split('/')[2]
+  if (id) {
+    const hit = profileList.value.find(p => p.form.id === id)
+    switch (hit?.config.mode) {
+      case 'pac_script':
+        form.id = hit.form.id
+        form.name = hit.form.name
+        form.mode = hit.form.mode
+        form.url = hit.form.url ?? ''
+        form.script = hit.form.script ?? ''
+        break
+
+      default:
+        break
+    }
+  }
+  else {
+    resetForm()
   }
 }
 
@@ -60,8 +90,8 @@ onMounted(() => {
     </el-form-item>
     <el-form-item label="类型">
       <el-radio-group v-model="form.mode">
-        <el-radio-button label="代理服务器" value="fixed_servers" />
         <el-radio-button label="PAC情景模式" value="pac_script" />
+        <el-radio-button label="代理服务器" value="fixed_servers" />
         <el-radio-button label="自动切换模式" value="auto_detect" />
       </el-radio-group>
     </el-form-item>
