@@ -32,7 +32,7 @@ function onSubmit() {
   const config = {
     mode: form.mode,
     pacScript: {
-      data: form.script,
+      url: form.url,
     },
   }
 

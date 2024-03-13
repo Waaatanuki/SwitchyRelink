@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { profileList } from '~/logic'
+import type { Mode, ProxyConfig } from '~/logic'
+import { currentProfileId, profileList } from '~/logic'
 
-const model = ref('')
-const config = ref<any>()
-const modelList = ref([
-  { label: '直接连接', key: 'direct' },
-  { label: '系统代理', key: 'system' },
+const defaultProfileList = ref<{ label: string, mode: Mode }[]>([
+  { label: '直接连接', mode: 'direct' },
+  { label: '系统代理', mode: 'system' },
 ])
 
-function onChange(modelName: string) {
-  model.value = modelName
-
-  browser.proxy.settings.set({ value: { mode: model.value }, scope: 'regular' })
-}
-// {"levelOfControl":"controlled_by_this_extension","value":{"mode":"system"}}
-// { "levelOfControl": "controllable_by_this_extension", "value": { "mode": "system" } }
-async function foo() {
-  config.value = JSON.stringify(await browser.proxy.settings.get({ incognito: false }))
+function onChange(id: string, config: ProxyConfig) {
+  currentProfileId.value = id
+  browser.proxy.settings.set({ value: config })
 }
 
 function openSetting() {
@@ -24,30 +17,40 @@ function openSetting() {
 }
 
 onMounted(async () => {
-  config.value = await browser.proxy.settings.get({})
-  model.value = config.value.value.mode
+  const config = await browser.proxy.settings.get({})
+  if (['direct', 'system'].includes (config.value.mode))
+    currentProfileId.value = config.value.mode
 })
 </script>
 
 <template>
-  <div w-50 flex flex-col>
+  <div w-130px flex flex-col>
     <el-check-tag
-      v-for="tag in modelList" :key="tag.key"
-      :checked="model === tag.key" type="primary" @change="onChange(tag.key)"
+      v-for="tag in defaultProfileList" :key="tag.mode"
+      :checked="currentProfileId === tag.mode" type="primary" @change="onChange(tag.mode, { mode: tag.mode })"
     >
-      {{ tag.label }}
+      <div text-center>
+        {{ tag.label }}
+      </div>
     </el-check-tag>
 
-    <div btn @click="foo">
-      测试
-    </div>
-    {{ config }}
-    <div btn @click="openSetting">
-      选项
-    </div>
+    <div border-t-1 />
+
+    <el-check-tag
+      v-for="profile in profileList" :key="profile.form.id"
+      :checked="currentProfileId === profile.form.id" type="primary" @change="onChange(profile.form.id, profile.config)"
+    >
+      <div text-center>
+        {{ profile.form.name }}
+      </div>
+    </el-check-tag>
+
+    <div border-t-1 />
+
+    <el-check-tag checked type="warning" @change="openSetting">
+      <div text-center>
+        选项
+      </div>
+    </el-check-tag>
   </div>
 </template>
-
-<style scoped>
-
-</style>

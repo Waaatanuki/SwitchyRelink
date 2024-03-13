@@ -1,22 +1,24 @@
 import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
 
+export const currentProfileId = useWebExtensionStorage<string>('currentProfileId', '')
 export const profileList = useWebExtensionStorage<Profile[]>('configList', [])
 
-interface Profile {
+export interface Profile {
   form: Form
   config: ProxyConfig
 }
+export type Mode = 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system'
 
 interface Form {
   id: string
   name: string
-  mode: 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system'
+  mode: Mode
   url?: string
   script?: string
 }
 
-interface ProxyConfig {
-  mode: 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system'
+export interface ProxyConfig {
+  mode: Mode
   pacScript?: PacScript
   rules?: ProxyRules
 }
