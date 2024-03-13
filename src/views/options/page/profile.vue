@@ -49,6 +49,10 @@ function onSubmit() {
       config,
     })
   }
+  backHome()
+}
+
+function backHome() {
   window.location.replace('/src/views/options/main.html')
 }
 
@@ -74,13 +78,9 @@ function init() {
   }
 }
 
-window.addEventListener('hashchange', () => {
-  init()
-})
+window.addEventListener('hashchange', () => { init() })
 
-onMounted(() => {
-  init()
-})
+onMounted(() => { init() })
 </script>
 
 <template>
@@ -114,7 +114,9 @@ onMounted(() => {
           <el-button type="primary" @click="onSubmit">
             确认
           </el-button>
-          <el-button>取消</el-button>
+          <el-button @click="backHome">
+            取消
+          </el-button>
         </div>
       </div>
     </el-form-item>

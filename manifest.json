@@ -16,7 +16,6 @@
     "activeTab",
     "scripting",
     "tabs",
-    "webRequest",
     "proxy"
   ],
   "host_permissions": ["<all_urls>"],

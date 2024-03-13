@@ -7,13 +7,15 @@ const defaultProfileList = ref<{ label: string, mode: Mode }[]>([
   { label: '系统代理', mode: 'system' },
 ])
 
-function onChange(id: string, config: ProxyConfig) {
+async function onChange(id: string, config: ProxyConfig) {
   currentProfileId.value = id
-  browser.proxy.settings.set({ value: config })
+  await browser.proxy.settings.set({ value: config })
   if (['direct', 'system'].includes(id))
     browser.action.setIcon({ path: `/assets/logo_${id}.png` })
   else
     browser.action.setIcon({ path: `/assets/logo_custom.png` })
+
+  browser.tabs.reload()
 }
 
 function openSetting() {
