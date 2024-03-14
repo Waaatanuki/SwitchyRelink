@@ -10,25 +10,14 @@ const defaultProfileList = ref<{ label: string, mode: Mode }[]>([
 async function onChange(id: string, config: ProxyConfig) {
   currentProfileId.value = id
   await browser.proxy.settings.set({ value: config })
-  if (['direct', 'system'].includes(id))
-    browser.action.setIcon({ path: `/assets/logo_${id}.png` })
-  else
-    browser.action.setIcon({ path: `/assets/logo_custom.png` })
-
+  await setIcon()
   browser.tabs.reload()
 }
 
 function openSetting() {
+  // browser.runtime.reload()
   browser.runtime.openOptionsPage()
 }
-
-onMounted(async () => {
-  const config = await browser.proxy.settings.get({})
-  if (['direct', 'system'].includes(config.value.mode)) {
-    currentProfileId.value = config.value.mode
-    browser.action.setIcon({ path: `/assets/logo_${config.value.mode}.png` })
-  }
-})
 </script>
 
 <template>

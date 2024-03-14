@@ -1,15 +1,16 @@
-async function setIcon() {
-  const { currentProfileId } = await browser.storage.local.get('currentProfileId')
-  if (['direct', 'system'].includes(currentProfileId))
-    browser.action.setIcon({ path: `/assets/logo_${currentProfileId}.png` })
-  else
-    browser.action.setIcon({ path: `/assets/logo_custom.png` })
-}
+import { currentProfileId } from '~/logic'
 
 browser.runtime.onStartup.addListener(() => {
+  console.log('onStartup')
   setIcon()
 })
 
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(async () => {
+  console.log('onInstalled')
+
+  const config = await browser.proxy.settings.get({})
+  if (['direct', 'system'].includes(config.value.mode))
+    currentProfileId.value = config.value.mode
+
   setIcon()
 })
