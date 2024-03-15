@@ -9,13 +9,12 @@ const defaultProfileList = ref<{ label: string, mode: Mode }[]>([
 
 async function onChange(id: string, config: ProxyConfig) {
   currentProfileId.value = id
-  await browser.proxy.settings.set({ value: config })
+  await browser.proxy.settings.set({ value: JSON.parse(JSON.stringify(config)) })
   await setIcon()
   browser.tabs.reload()
 }
 
 function openSetting() {
-  // browser.runtime.reload()
   browser.runtime.openOptionsPage()
 }
 </script>

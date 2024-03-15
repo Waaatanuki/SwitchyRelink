@@ -9,12 +9,22 @@ export interface Profile {
 }
 export type Mode = 'direct' | 'auto_detect' | 'pac_script' | 'fixed_servers' | 'system'
 
-interface Form {
+export interface Form {
   id: string
   name: string
   mode: Mode
-  url?: string
-  script?: string
+  url: string
+  script: string
+  serverRules: ServerRule[]
+  bypassText: string
+  bypassList: string[]
+}
+
+export interface ServerRule {
+  protocol: string
+  scheme: string
+  host: string
+  port: string
 }
 
 export interface ProxyConfig {
@@ -38,8 +48,9 @@ interface ProxyRules {
   singleProxy?: ProxyServer
 }
 
+export type Scheme = 'http' | 'https' | 'quic' | 'socks4' | 'socks5'
 interface ProxyServer {
   host: string
   port?: number
-  scheme?: 'http' | 'https' | 'quic' | 'socks4' | 'socks5'
+  scheme?: Scheme
 }

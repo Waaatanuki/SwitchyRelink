@@ -72,7 +72,7 @@ function deleteProfile(id: string) {
       </div>
     </div>
 
-    <div p-20px>
+    <div w-full p-20px>
       <component :is="currentView" />
     </div>
   </div>
